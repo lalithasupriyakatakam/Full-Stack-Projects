@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sudoku Solver - Backtracking</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f6f8;
+}
+
+h1 {
+    margin-top: 20px;
+}
+
+#sudoku-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 50px);
+    grid-template-rows: repeat(9, 50px);
+    gap: 2px;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+input {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #999;
+}
+
+input:focus {
+    outline: none;
+    background-color: #e3f2fd;
+}
+
+/* Bold borders for 3x3 grids */
+input:nth-child(3n) {
+    border-right: 2px solid black;
+}
+input:nth-child(n+19):nth-child(-n+27),
+input:nth-child(n+46):nth-child(-n+54) {
+    border-bottom: 2px solid black;
+}
+
+.buttons {
+    margin-top: 15px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+
+    <h1>Sudoku Solver</h1>
+    <p>Developed using Backtracking Algorithm</p>
+
+    <div id="sudoku-grid"></div>
+
+    <div class="buttons">
+        <button onclick="solveSudoku()">Solve</button>
+        <button onclick="clearGrid()">Clear</button>
+    </div>
+
+    <script>
+        const grid = document.getElementById("sudoku-grid");
+
+// Create 9x9 input grid
+for (let i = 0; i < 81; i++) {
+    const input = document.createElement("input");
+    input.type = "number";
+    input.min = 1;
+    input.max = 9;
+    grid.appendChild(input);
+}
+
+// Get board from UI
+function getBoard() {
+    const board = [];
+    const inputs = document.querySelectorAll("input");
+
+    for (let i = 0; i < 9; i++) {
+        board[i] = [];
+        for (let j = 0; j < 9; j++) {
+            const value = inputs[i * 9 + j].value;
+            board[i][j] = value === "" ? 0 : parseInt(value);
+        }
+    }
+    return board;
+}
+
+// Update UI from board
+function setBoard(board) {
+    const inputs = document.querySelectorAll("input");
+    for (let i = 0; i < 81; i++) {
+        inputs[i].value = board[Math.floor(i / 9)][i % 9] || "";
+    }
+}
+
+// Check if number can be placed
+function isValid(board, row, col, num) {
+    for (let i = 0; i < 9; i++) {
+        if (board[row][i] === num || board[i][col] === num) {
+            return false;
+        }
+    }
+
+    const startRow = row - (row % 3);
+    const startCol = col - (col % 3);
+
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (board[startRow + i][startCol + j] === num) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+// Backtracking Sudoku Solver
+function solve(board) {
+    for (let row = 0; row < 9; row++) {
+        for (let col = 0; col < 9; col++) {
+            if (board[row][col] === 0) {
+                for (let num = 1; num <= 9; num++) {
+                    if (isValid(board, row, col, num)) {
+                        board[row][col] = num;
+
+                        if (solve(board)) {
+                            return true;
+                        }
+
+                        board[row][col] = 0; // Backtrack
+                    }
+                }
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// Solve button
+function solveSudoku() {
+    const board = getBoard();
+    if (solve(board)) {
+        setBoard(board);
+    } else {
+        alert("No solution exists!");
+    }
+}
+
+// Clear button
+function clearGrid() {
+    document.querySelectorAll("input").forEach(input => input.value = "");
+}
+
+    </script>
+</body>
+</html>
