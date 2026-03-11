@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Iniche — 30-Day Content Calendar (Growth + Engagement)</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#9aa4b2;--accent:#06b6d4;--glass: rgba(255,255,255,0.03)}
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:linear-gradient(180deg,#071025 0%, #061424 100%);color:#e6eef6;min-height:100vh;padding:28px}
+    h1{font-size:20px;margin:0 0 6px}
+    p.lead{margin:0 0 18px;color:var(--muted)}
+    .wrap{max-width:1100px;margin:0 auto}
+    .toolbar{display:flex;gap:8px;align-items:center;margin-bottom:16px}
+    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:inherit;cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#7c3aed);box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+    .controls{margin-left:auto;display:flex;gap:8px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03)}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.03);text-align:left;font-size:13px}
+    th{position:sticky;top:0;background:rgba(0,0,0,0.25);backdrop-filter:blur(6px)}
+    tr:hover td{background:rgba(255,255,255,0.01)}
+    .pill{display:inline-block;padding:6px 8px;border-radius:999px;font-size:12px;background:rgba(255,255,255,0.03)}
+    .k{color:var(--muted);font-size:12px}
+    .tag{font-weight:600;font-size:12px;padding:4px 8px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03)}
+    .legend{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .filters{display:flex;gap:8px;align-items:center}
+    input.search{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    @media (max-width:900px){table{font-size:12px}th:nth-child(4),td:nth-child(4){display:none}}
+    footer{margin-top:14px;color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <div style="width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#0ea5a4,#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px">IN</div>
+      <div>
+        <h1>Iniche — 30-Day Content Calendar</h1>
+        <p class="lead">Optimized for growth & engagement. Each day includes: platform, topic, hook, CTA and format. Use the controls to filter, export or copy.</p>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <button class="btn primary" id="exportCsv">Export CSV</button>
+      <button class="btn" id="copyCsv">Copy CSV</button>
+      <button class="btn" id="shuffle">Regenerate Hooks</button>
+      <div class="controls">
+        <div class="filters card" style="display:flex;align-items:center;gap:8px;padding:8px">
+          <label class="k">Platform</label>
+          <select id="platformFilter" class="btn">
+            <option value="all">All</option>
+            <option>Instagram</option>
+            <option>TikTok</option>
+            <option>LinkedIn</option>
+            <option>Twitter/X</option>
+            <option>YouTube Shorts</option>
+            <option>Facebook</option>
+            <option>Pinterest</option>
+          </select>
+        </div>
+        <input id="search" class="search" placeholder="Search topic, hook, CTA..." />
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <span class="pill">30 days • growth-first • engagement-tested</span>
+          <div class="legend">
+            <span class="tag">Formats: Carousel, Reel, Short, Tweet, Thread, Live, Video, Pin</span>
+            <span class="k">Hooks use contrast + curiosity + benefit</span>
+          </div>
+        </div>
+        <div class="k">Tip: click any row to copy that day's content</div>
+      </div>
+
+      <table id="calendar">
+        <thead>
+          <tr><th>Day</th><th>Platform</th><th>Topic</th><th>Hook</th><th>CTA</th><th>Format</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <footer>Built for Iniche — tailored mix of education, authority, community & offers.</footer>
+    </div>
+  </div>
+  <script>
+    // 30-day calendar data (explicit entries). Brand: "Iniche". Each item: day, platform, topic, hook, cta, format
+    const calendar = [
+      {day:1,platform:'Instagram',topic:'Founder story: why Iniche started',hook:'I quit my job to build this — here’s the real reason.',cta:'Comment if you’d do the same',format:'Carousel'},
+      {day:2,platform:'LinkedIn',topic:'Industry stat + insight',hook:'80% of users struggle with X — what that means for brands',cta:'Share your experience',format:'Article/Long post'},
+      {day:3,platform:'TikTok',topic:'Quick product demo',hook:'See how Iniche cuts X time in half',cta:'Try it free (link in bio)',format:'Reel'},
+      {day:4,platform:'Twitter/X',topic:'Micro-tip thread',hook:'5 tiny changes that boost engagement 2x',cta:'Retweet the best tip',format:'Thread'},
+      {day:5,platform:'YouTube Shorts',topic:'Behind-the-scenes',hook:'A day at Iniche — what nobody sees',cta:'Subscribe for weekly BTS',format:'Short'},
+      {day:6,platform:'Instagram',topic:'Customer testimonial',hook:'They doubled revenue in 3 months — here’s how',cta:'DM us for a case study',format:'Reel'},
+      {day:7,platform:'LinkedIn',topic:'How-to guide',hook:'Step-by-step: Build a content plan that converts',cta:'Save this post',format:'Carousel'},
+      {day:8,platform:'TikTok',topic:'Common mistake',hook:'Stop doing this if you want growth',cta:'Follow for more mistakes to avoid',format:'Reel'},
+      {day:9,platform:'Instagram',topic:'User-generated content roundup',hook:'Real users, real wins — watch these',cta:'Share yours with #InicheWins',format:'Carousel'},
+      {day:10,platform:'Twitter/X',topic:'Poll + debate',hook:'Which strategy works better — A or B?',cta:'Vote & explain why',format:'Poll'},
+      {day:11,platform:'YouTube Shorts',topic:'Feature spotlight',hook:'This tiny feature = big time saved',cta:'Watch full demo',format:'Short'},
+      {day:12,platform:'Instagram',topic:'Lead magnet offer',hook:'Free template: content calendar for creators',cta:'Download (link in bio)',format:'Post + Link'},
+      {day:13,platform:'LinkedIn',topic:'Founder lessons',hook:'3 mistakes I made building product-market fit',cta:'Comment with your lesson',format:'Long post'},
+      {day:14,platform:'TikTok',topic:'Trend adaptation',hook:'We tried the viral trend — here’s what happened',cta:'Like if you want the full case study',format:'Reel'},
+      {day:15,platform:'Instagram',topic:'AMA announcement',hook:'Ask us anything about scaling content',cta:'Drop questions in comments',format:'Story + Post'},
+      {day:16,platform:'Twitter/X',topic:'Quick wins',hook:'Use this 3-word change to increase CTR',cta:'Quote tweet with your result',format:'Tweet'},
+      {day:17,platform:'YouTube Shorts',topic:'Client success story',hook:'From zero to paying customers — 60s case study',cta:'Contact sales',format:'Short'},
+      {day:18,platform:'Instagram',topic:'Before/After',hook:'Before Iniche vs After Iniche — the difference',cta:'Save for reference',format:'Carousel'},
+      {day:19,platform:'LinkedIn',topic:'Process deep-dive',hook:'How our team runs content sprints',cta:'Request the template',format:'Article/Long post'},
+      {day:20,platform:'TikTok',topic:'Entertaining myth-bust',hook:'Failing at X isn’t the problem — this is',cta:'Follow for myth-busts',format:'Reel'},
+      {day:21,platform:'Instagram',topic:'Product walkthrough (mini)',hook:'3 things you didn’t know our tool could do',cta:'Try a free trial',format:'Reel'},
+      {day:22,platform:'Twitter/X',topic:'Resource share',hook:'The 7 books that shaped our marketing',cta:'Reply with your fav',format:'Tweet'},
+      {day:23,platform:'LinkedIn',topic:'Team spotlight',hook:'Meet the person who owns growth at Iniche',cta:'Congratulate them',format:'Post with photo'},
+      {day:24,platform:'Instagram',topic:'Checklist',hook:'The ultimate pre-launch checklist (downloadable)',cta:'Get the checklist',format:'Carousel'},
+      {day:25,platform:'TikTok',topic:'Quick FAQ',hook:'Answering the top 3 questions we get',cta:'Ask more questions',format:'Reel'},
+      {day:26,platform:'YouTube Shorts',topic:'Event recap',hook:'Highlights from our latest webinar in 60s',cta:'Watch full webinar',format:'Short'},
+      {day:27,platform:'Instagram',topic:'Offer + urgency',hook:'48-hour deal for new signups — limited spots',cta:'Sign up now',format:'Post + Story'},
+      {day:28,platform:'LinkedIn',topic:'Case study snapshot',hook:'How Client X increased LTV by 21%',cta:'Read full case study',format:'Article/Slide'},
+      {day:29,platform:'Twitter/X',topic:'Reflection',hook:'What we learned this month — wins & fails',cta:'Share your learnings',format:'Thread'},
+      {day:30,platform:'Instagram',topic:'Month recap + next month tease',hook:'What to expect next month (big reveal)',cta:'Turn on post notifications',format:'Carousel'}
+    ];
+
+    const tbody = document.querySelector('#calendar tbody');
+
+    function render(rows){
+      tbody.innerHTML = '';
+      rows.forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.day}</td><td><strong>${r.platform}</strong></td><td>${escapeHtml(r.topic)}</td><td>${escapeHtml(r.hook)}</td><td>${escapeHtml(r.cta)}</td><td>${r.format}</td>`;
+        tr.addEventListener('click',()=>copyRow(r));
+        tbody.appendChild(tr);
+      });
+    }
+
+    function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+    render(calendar);
+
+    // Filters
+    document.getElementById('platformFilter').addEventListener('change',applyFilters);
+    document.getElementById('search').addEventListener('input',applyFilters);
+
+    function applyFilters(){
+      const pf = document.getElementById('platformFilter').value;
+      const q = document.getElementById('search').value.toLowerCase().trim();
+      const filtered = calendar.filter(item=>{
+        const inPlatform = pf==='all' || item.platform===pf;
+        const inQuery = q==='' || [item.topic,item.hook,item.cta,item.format].join(' ').toLowerCase().includes(q);
+        return inPlatform && inQuery;
+      });
+      render(filtered);
+    }
+
+    // Copy single row text
+    function copyRow(r){
+      const text = `Day ${r.day} | ${r.platform} | ${r.topic} | Hook: ${r.hook} | CTA: ${r.cta} | Format: ${r.format}`;
+      navigator.clipboard.writeText(text).then(()=>{
+        alert('Copied: ' + text);
+      });
+    }
+
+    // Export CSV
+    function toCsv(arr){
+      const header = ['Day','Platform','Topic','Hook','CTA','Format'];
+      const lines = [header.join(',')];
+      arr.forEach(it=>{
+        const row = [it.day,it.platform,`"${it.topic.replace(/"/g,'""')}"`,`"${it.hook.replace(/"/g,'""')}"`,`"${it.cta.replace(/"/g,'""')}"`,it.format];
+        lines.push(row.join(','));
+      });
+      return lines.join('\n');
+    }
+
+    document.getElementById('exportCsv').addEventListener('click',()=>{
+      const csv = toCsv(calendar);
+      const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'iniche-30-day-calendar.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('copyCsv').addEventListener('click',async()=>{
+      const csv = toCsv(calendar);
+      try{ await navigator.clipboard.writeText(csv); alert('CSV copied to clipboard'); }catch(e){alert('Copy failed — browser may block clipboard')}
+    });
+
+    // Shuffle/regenerate hooks (lightweight) — preserves topics but tweaks hooks for freshness
+    document.getElementById('shuffle').addEventListener('click',()=>{
+      const verbs = ['How we', 'Why we', 'What happens when you', 'Stop doing', 'The secret to', 'A quick trick to'];
+      calendar.forEach(it=>{
+        const pieces = it.hook.split(' — ');
+        const base = pieces[0];
+        const verb = verbs[Math.floor(Math.random()*verbs.length)];
+        it.hook = `${verb} ${base.split(' ').slice(0,6).join(' ')}...`;
+      });
+      applyFilters();
+    });
+
+    // Quick note: allow downloading visible rows only
+    // (not strictly necessary but helpful)
+    // Accessibility small helpers
+    document.addEventListener('keydown',e=>{
+      if(e.key==='f' && (e.ctrlKey||e.metaKey)){ e.preventDefault(); document.getElementById('search').focus(); }
+    });
+
+  </script>
+</body>
+</html>
